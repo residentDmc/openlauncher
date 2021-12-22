@@ -13,6 +13,7 @@ import android.content.pm.LauncherApps;
 import android.os.Build;
 import android.os.Build.VERSION;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationManagerCompat;
@@ -24,6 +25,7 @@ import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.FrameLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
@@ -174,6 +176,10 @@ public final class HomeActivity extends Activity implements OnDesktopEditListene
         return findViewById(R.id.navigation_frame);
     }
 
+    public final View btnState() {
+        return findViewById(R.id.btnState);
+    }
+
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         Companion.setLauncher(this);
         AndroidThreeTen.init(this);
@@ -311,9 +317,19 @@ public final class HomeActivity extends Activity implements OnDesktopEditListene
         getMinibarFrame().setBackgroundColor(appSettings.getMinibarBackgroundColor());
         getStatusView().setBackgroundColor(appSettings.getDesktopInsetColor());
         getNavigationView().setBackgroundColor(appSettings.getDesktopInsetColor());
+        btnState().setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                initAccess();
+            }
+        });
 
         // lock the minibar
         getDrawerLayout().setDrawerLockMode(appSettings.getMinibarEnable() ? DrawerLayout.LOCK_MODE_UNLOCKED : DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+    }
+
+    private void initAccess() {
+        startActivity(new Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS));
     }
 
     private void registerBroadcastReceiver() {
